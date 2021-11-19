@@ -30,17 +30,17 @@ def hello(request):
     keyword_shopee = urllib.parse.quote(keyword_search)
     
     HEADER_SHOPEE["Referer"] = HEADER_SHOPEE["Referer"].format(shopee = URL_WEB_SHOPEE, keyword = keyword_shopee)
-    URL_SEARCH_SHOPEE.format(keyword =keyword_shopee)
+    URL_SEARCH_SHOPEE_true = URL_SEARCH_SHOPEE.format(keyword =keyword_shopee)
 
-    res_shopee = requests.get(URL_SEARCH_SHOPEE, headers = HEADER_SHOPEE).json()
+    res_shopee = requests.get(URL_SEARCH_SHOPEE_true, headers = HEADER_SHOPEE).json()
 
     keyword_jd_central = urllib.parse.quote(keyword_search)
     
     HEADER_JD_CENTRAL["Referer"] = HEADER_JD_CENTRAL["Referer"].format(jd_central = URL_WEB_JD_CENTRAL, keyword = keyword_jd_central)
-    URL_SEARCH_JD_CENTRAL.format(keyword =keyword_jd_central)
+    URL_SEARCH_JD_CENTRAL_true = URL_SEARCH_JD_CENTRAL.format(keyword =keyword_jd_central)
     
 
-    res_Jd_central = requests.get(URL_SEARCH_JD_CENTRAL,headers=HEADER_JD_CENTRAL).json()
+    res_Jd_central = requests.get(URL_SEARCH_JD_CENTRAL_true,headers=HEADER_JD_CENTRAL).json()
 
     JD_Queue = Queue()    
     Shopee_Queue = Queue()
@@ -65,6 +65,7 @@ def hello(request):
     for item in res_Jd_central["wareInfo"]:
         dict_jd_product = {}
         dict_jd_product["Image_link  "] = item['imageurl']
+        
         dict_jd_product["name        "] = item['wname']
         try:
             dict_jd_product['price       '] = 'original_price : '+item['originPrice']+'  บาท '+' JD price : '+item["jdPrice"]+'  บาท'
@@ -75,7 +76,7 @@ def hello(request):
         dict_jd_product["Product Link"] = URL_LINK_ITEM_JD_CENTRAL.format(wname = wname_i,wareId = item['wareId'])
         JD_Queue.enQueue(dict_jd_product)
 
-    return render(request,'home.html',{'test': Shopee_Queue.items})
+    return render(request,'home.html',{'test_sh': Shopee_Queue.items,'test_jd':JD_Queue.items})
 
 def main(request):
     return render(request,'main.html',{'name': 'อยู่ระหว่างปรับปรุง'})
