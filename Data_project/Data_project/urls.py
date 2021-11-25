@@ -20,6 +20,7 @@ from shopback_decoy import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.main),
-    path('hello/',views.hello),
-    path('test/',views.new_html)
+    path('shop/',views.shop),
+    path('test/',views.new_html),
+    
 ]

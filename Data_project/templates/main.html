@@ -7,8 +7,15 @@
     <title>แตงโม</title>
 </head>
 <body>
-    <h5>สวัสดีครับท่านสมาชิกชมรมคนชอบทำความดี</h5>
-    {{name}}
-    
+    {% block content %}
+    <h2>search</h2>
+    <form action="shop" methon = "get">
+        <div class = "form-group">
+            <input type="text" class = "form-control" name="item">
+        </div>
+        <input type = "submit" value= "submit" class = "btn btn-primary">
+    </form>
+    {% endblock %}
+    </div>
 </body>
 </html>

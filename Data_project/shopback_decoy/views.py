@@ -24,8 +24,9 @@ class Queue:
         return self.items == []
 
 # Create your views here.
-def hello(request):
-    keyword_search = 'headphone'
+def shop(request):
+    item = request.GET['item']
+    keyword_search = str(item)
 
     keyword_shopee = urllib.parse.quote(keyword_search)
     
@@ -45,32 +46,37 @@ def hello(request):
     JD_Queue = Queue()    
     Shopee_Queue = Queue()
 
-    print('\n*****SHOPEE*****\n')
+
     for item in res_shopee["items"]:
         dict_shopee_product = {}
         image_link = (URL_IMAGE_SHOPEE+str(item['item_basic']['image']))
-        dict_shopee_product["Image_link  "] = image_link
-        dict_shopee_product["name        "] = item['item_basic']['name']
+        dict_shopee_product["Image_link"] = image_link
+        dict_shopee_product["Name"] = item['item_basic']['name']
         if (int(item['item_basic']['price_min']) != int(item['item_basic']['price_max'])):
-            dict_shopee_product['price       '] = "price min : "+str(int(item['item_basic']['price_min'])/100000)+"บาท |  price max : "+str(int(item['item_basic']['price_max'])/100000) +"บาท"
+            dict_shopee_product['cost'] = str(int(item['item_basic']['price_min'])/100000)+"บาท "
+            dict_shopee_product['price min'] = str(int(item['item_basic']['price_min'])/100000)+"บาท "
+            dict_shopee_product['price max'] = str(int(item['item_basic']['price_max'])/100000) +"บาท"
         else:
-            dict_shopee_product['price       '] = "price : "+str(int(item['item_basic']['price'])/100000)+"บาท"
+            dict_shopee_product['cost'] = str(int(item['item_basic']['price'])/100000)+"บาท "
+            dict_shopee_product['price'] = str(int(item['item_basic']['price'])/100000)+"บาท"
         taillink = item['item_basic']['name']
-        newtaillink = taillink.replace(" ","-")
+        utaillink = taillink.replace("%","")
+        newtaillink = utaillink.replace(" ","-")
         Product_link = URL_LINK_ITEM_SHOPEE+newtaillink
         Product_link = Product_link +'-i.'+ str(item['item_basic']['shopid'])+'.'+str(item['item_basic']['itemid'])
         dict_shopee_product["Product Link"] = Product_link
         Shopee_Queue.enQueue(dict_shopee_product)
-    print(Shopee_Queue)
+
+
     for item in res_Jd_central["wareInfo"]:
         dict_jd_product = {}
-        dict_jd_product["Image_link  "] = item['imageurl']
+        dict_jd_product["Image_link"] = item['imageurl']
         
-        dict_jd_product["name        "] = item['wname']
+        dict_jd_product["Name"] = item['wname']
         try:
-            dict_jd_product['price       '] = 'original_price : '+item['originPrice']+'  บาท '+' JD price : '+item["jdPrice"]+'  บาท'
+            dict_jd_product['original_price'] = item['originPrice']+'  บาท '+' JD price : '+item["jdPrice"]+'  บาท'
         except KeyError:
-            dict_jd_product['price       '] = 'JD price : '+item["jdPrice"]+'  บาท'
+            dict_jd_product['JD price'] = item["jdPrice"]+'  บาท'
         wname_i = item['wname']
         wname_i = wname_i.replace(" ","%20")
         dict_jd_product["Product Link"] = URL_LINK_ITEM_JD_CENTRAL.format(wname = wname_i,wareId = item['wareId'])
@@ -79,6 +85,7 @@ def hello(request):
     return render(request,'home.html',{'test_sh': Shopee_Queue.items,'test_jd':JD_Queue.items})
 
 def main(request):
-    return render(request,'main.html',{'name': 'อยู่ระหว่างปรับปรุง'})
+    return render(request,'main.html')
 def new_html(request):
-    return render(request,'index.html')
+    d = {'one':'itemone', 'two':'itemtwo', 'three':'itemthree'}
+    return render(request,'index.html', {'d':d})

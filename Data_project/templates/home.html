@@ -4,12 +4,37 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>SHOP</title>
 </head>
 <body>
-    <h2>**********SHOPEE**********</h2>
-    {{test_sh}}
-    <h2>**********JD_CENTRAL**********</h2>
-    {{test_jd}}
+    <h1><center>**********SHOPEE**********</center></h1>
+    {% for i in test_sh %}
+        {% for key,value in i.items %}
+            {% if key == 'Image_link' %}
+                <img src = {{value}} width="10%" >
+            {% elif key == 'Product Link' %}
+                <a href= {{value}}>Shopee_product_link</a>
+            {% elif key != 'cost' %}
+                <p>{{key}} : {{ value }}</p>
+            {% endif %}
+            
+        {% endfor %}
+        <p></p>
+    {% endfor %}
+    
+    <h1><center>************JD_CENTRAL**********</center></h1>
+    {% for i in test_jd %}
+        {% for key,value in i.items %}
+            {% if key == 'Image_link' %}
+                <img src = {{value}} width="10%" >
+            {% elif key == 'Product Link' %}
+                <a href= {{value}}>JD_Central_product_link</a>
+            {% else %}
+                <p>{{key}} : {{ value }}</p>
+            {% endif %}
+            
+        {% endfor %}
+        <p></p>
+    {% endfor %}
 </body>
 </html>
